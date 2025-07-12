@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Example 3: Infinite Scroll</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    h2 { margin-bottom: 10px; }
+    #infiniteContainer { max-width: 400px; margin: auto; }
+    .item { padding: 10px; border-bottom: 1px solid #ddd; display: flex; align-items: center; }
+    .item img {
+      width: 60px; height: 60px; background: #eee; margin-right: 10px;
+      opacity: 0; transition: opacity 0.5s ease;
+    }
+    .item img.loaded { opacity: 1; }
+    .spinner { font-style: italic; color: #666; text-align: center; display: none; margin-top: 10px; }
+    a { display: inline-block; margin-top: 20px; color: #0066cc; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h2>Example 3: Infinite Scroll & Lazy Loading</h2>
+  <div id="infiniteContainer"></div>
+  <div id="scrollStatus" class="spinner">Loading more…</div>
+  <a href="index.html">← Back to Index</a>
+
+  <script>
+    let loading = false;
+let count = 0;
+    const container = document.getElementById('infiniteContainer');
+    const status = document.getElementById('scrollStatus');
+
+    function loadBatch(n = 10) {
+      loading = true;
+      status.style.display = 'block';
+      setTimeout(() => {
+        for (let i = 0; i < n; i++) {
+          count++;
+          const div = document.createElement('div');
+          div.className = 'item';
+          div.innerHTML = `
+            <img data-src="https://via.placeholder.com/60?text=${count}" />
+            Item #${count}
+          `;
+          container.appendChild(div);
+          observer.observe(div.querySelector('img'));
+        }
+        loading = false;
+        status.style.display = 'none';
+      }, 800);
+    }
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          const img = e.target;
+          img.src = img.dataset.src;
+          img.onload = () => img.classList.add('loaded');
+          obs.unobserve(img);
+        }
+      });
+    });
+
+    window.addEventListener('scroll', () => {
+      if (!loading && window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+        loadBatch();
+      }
+    });
+
+    loadBatch(); // initial load
+  </script>
+</body>
+</html>

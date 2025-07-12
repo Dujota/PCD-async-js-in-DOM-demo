@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Example 2: Async Modal</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    h2 { margin-bottom: 10px; }
+    .spinner { font-style: italic; color: #666; }
+    #modalOverlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center;
+    }
+    #modal {
+      background: #fff; padding: 20px; border-radius: 8px; width: 300px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    #modalContent { display: none; }
+    a { display: inline-block; margin-top: 20px; color: #0066cc; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h2>Example 2: Async Modal Window</h2>
+  <button id="openModalBtn">Open Modal</button>
+  <div id="modalOverlay">
+    <div id="modal">
+      <div id="modalSpinner" class="spinner">Loading content…</div>
+      <div id="modalContent">
+        <form>
+          <label>Username:<br><input type="text" /></label><br><br>
+          <label>Password:<br><input type="password" /></label><br><br>
+          <button type="button" id="closeModalBtn">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <a href="index.html">← Back to Index</a>
+
+  <script>
+    const overlay = document.getElementById('modalOverlay');
+    document.getElementById('openModalBtn').onclick = () => {
+      overlay.style.display = 'flex';
+      document.getElementById('modalContent').style.display = 'none';
+      document.getElementById('modalSpinner').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('modalSpinner').style.display = 'none';
+        document.getElementById('modalContent').style.display = 'block';
+      }, 1000);
+    };
+    document.getElementById('closeModalBtn').onclick = () => (overlay.style.display = 'none');
+  </script>
+</body>
+</html>

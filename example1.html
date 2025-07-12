@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Example 1: Live Search</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    h2 { margin-bottom: 10px; }
+    .spinner { font-style: italic; color: #666; display: none; }
+    .suggestions { border: 1px solid #ccc; max-width: 300px; margin-top: 10px; }
+    .suggestions li { padding: 5px 10px; cursor: pointer; }
+    .suggestions li:hover { background: #f0f0f0; }
+    a { display: inline-block; margin-top: 20px; color: #0066cc; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h2>Example 1: Live Search with Spinner</h2>
+  <input type="text" id="searchBox" placeholder="Type to search…" />
+  <div id="searchStatus" class="spinner">Searching…</div>
+  <ul id="suggestions" class="suggestions"></ul>
+  <a href="index.html">← Back to Index</a>
+
+  <script>
+    const suggestions = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape', 'Honeydew'];
+    let timer;
+    const box = document.getElementById('searchBox');
+    const status = document.getElementById('searchStatus');
+    const list = document.getElementById('suggestions');
+
+    box.addEventListener('input', (e) => {
+      clearTimeout(timer);
+      const q = e.target.value.trim().toLowerCase();
+      list.innerHTML = '';
+      if (!q) return (status.style.display = 'none');
+      status.style.display = 'block';
+
+      timer = setTimeout(() => {
+        const matches = suggestions.filter((s) => s.toLowerCase().includes(q));
+        list.innerHTML = matches.length ? matches.map((m) => `<li>${m}</li>`).join('') : '<li>No results</li>';
+        status.style.display = 'none';
+      }, 500);
+    });
+  </script>
+</body>
+</html>
